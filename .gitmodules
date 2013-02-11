@@ -1,0 +1,3 @@
+[submodule "Magnet2Torrent"]
+	path = Magnet2Torrent
+	url = git@github.com:clowwindy/Magnet2Torrent.git

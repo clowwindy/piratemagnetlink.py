@@ -3,6 +3,7 @@
 
 import re
 import urllib
+import codecs
 from pyquery import PyQuery as pq
 from subprocess import Popen, PIPE
 import math
@@ -72,8 +73,8 @@ def parse(content):
             continue
         
         item = attrdict()
-        item.title = title
-        # item.magnet = magnet 
+        item.title = codecs.encode(title, 'utf-8')
+        item.magnet = magnet 
         # item.link = link 
         item.seeders = int(seeders) 
         item.size = float(size_frag[1]) 
@@ -85,9 +86,16 @@ def parse(content):
    
     
 if __name__ == '__main__':
-    for line in open('input.txt', 'rb'):
-        words = line.strip().split('\t')
-        print words[2]
-        for item in parse(get_movie_page(words[2])):
-            print item
-        print
+    with open('output.txt', 'wb') as o:
+        for line in open('input.txt', 'rb'):
+            words = line.strip().split('\t')
+            print words[2]
+            items = parse(get_movie_page(words[2]))
+            for item in items:
+                print item
+            if len(items) > 0:
+                item = items[0]
+                print >> o, '%s\t%s\t%s\t%f\t%f' % (words[2], item.title, item.magnet, item.size, item.seeders)
+                o.flush()
+            else:
+                print >> o, '%s\t\t\t\t' % words[2] 
