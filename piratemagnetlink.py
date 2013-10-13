@@ -7,6 +7,7 @@ import codecs
 from pyquery import PyQuery as pq
 from subprocess import Popen, PIPE
 import math
+import multiprocessing
 
 def sigmoid(x):
     return 1 / (1 + math.exp(-x))
@@ -17,9 +18,9 @@ class attrdict(dict):
         self.__dict__ = self
         
 def get_movie_page(movie_name):
-    url = 'http://thepiratebay.se/search/%s/0/7/200' % urllib.quote(movie_name)
+    url = 'http://thepiratebay.sx/search/%s/0/7/200' % urllib.quote(movie_name)
     
-    curl = Popen(('curl', '--socks5-hostname', '127.0.0.1:1080', url) , shell=False, bufsize=0, stdin=PIPE, 
+    curl = Popen(('curl', '-L', '--socks5-hostname', '127.0.0.1:1080', url) , shell=False, bufsize=0, stdin=PIPE, 
     stdout=PIPE, stderr=PIPE, close_fds=True )
     
     content = curl.stdout.read()
@@ -86,16 +87,19 @@ def parse(content):
    
     
 if __name__ == '__main__':
-    with open('output.txt', 'wb') as o:
-        for line in open('input.txt', 'rb'):
+    with open('output2.txt', 'wb') as o:
+        f = open('favo.txt', 'rb')
+        def process(line):
             words = line.strip().split('\t')
-            print words[2]
-            items = parse(get_movie_page(words[2]))
+            print line
+            items = parse(get_movie_page(line))
             for item in items:
                 print item
             if len(items) > 0:
                 item = items[0]
-                print >> o, '%s\t%s\t%s\t%f\t%f' % (words[2], item.title, item.magnet, item.size, item.seeders)
+                print >> o, '%s\t%s\t%s\t%f\t%f' % (line, item.title, item.magnet, item.size, item.seeders)
                 o.flush()
             else:
-                print >> o, '%s\t\t\t\t' % words[2] 
+                print >> o, '%s\t\t\t\t' % line
+        p = multiprocessing.Pool(5)
+        p.map(process, f)

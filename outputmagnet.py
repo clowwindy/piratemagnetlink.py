@@ -4,5 +4,8 @@
 with open('magnet.txt', 'wb') as f:
     for line in open('output.txt'):
         words = line.split('\t')
-        print >>f, words[2]
+        try:
+            print >>f, words[2]
+        except:
+            pass
         
