@@ -87,7 +87,7 @@ def parse(content):
    
     
 if __name__ == '__main__':
-    with open('output2.txt', 'wb') as o:
+    with open('output.txt', 'wb') as o:
         f = open('favo.txt', 'rb')
         def process(line):
             words = line.strip().split('\t')
