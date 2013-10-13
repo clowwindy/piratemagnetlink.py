@@ -1,6 +1,8 @@
 piratemagnetlink.py
 ===================
 
+只支持 Unix 环境。先 pip install pyquery 安装依赖。然后：
+
 1. 打开豆瓣电影的我看列表，点列表右上角的紧凑排列图标，然后看一下总页数
 2. 编辑 douban.py，修改用户名和总页数
 3. 运行 douban.py，把输出放到 output.txt 里
