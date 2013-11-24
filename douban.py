@@ -3,10 +3,12 @@
 
 
 import re
+import sys
 import urllib
 import codecs
 from pyquery import PyQuery as pq
 from subprocess import Popen, PIPE
+import multiprocessing
 
 username = 'clowwindy'
 pages = 3
@@ -57,15 +59,23 @@ def parse_imdb(content):
     doc = pq(content)
     return doc.find('h1.header .itemprop').text() + ' ' + doc.find('h1.header .nobr').text()
 
+all_links = []
+
 for i in range(0, pages):
     content = get_douban_list_page(i)
     links = parse_douban_list_page(content)
-    for link in links:
-        item_page = get_page(link)
-        imdb_link = parse_douban_item_page(item_page)
-        if imdb_link:
-            imdb_page = get_page(imdb_link)
-            try:
-                print parse_imdb(imdb_page)
-            except:
-                pass
+    all_links.extend(links)
+
+def process(link):
+    item_page = get_page(link)
+    imdb_link = parse_douban_item_page(item_page)
+    if imdb_link:
+        imdb_page = get_page(imdb_link)
+        try:
+            print parse_imdb(imdb_page)
+        except:
+            pass
+
+p = multiprocessing.Pool(5)
+p.map(process, all_links)
+

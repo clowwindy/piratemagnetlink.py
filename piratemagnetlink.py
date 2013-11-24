@@ -68,10 +68,14 @@ def parse(content):
         seeders = row.find('td')[2].text
         font_desc = row.find('font.detDesc')
         size = font_desc.text().split(',')[1].strip()
+        is_mb = False
 
         size_frag = filter(lambda a:a, re.split('\s|\xa0', size))
         if size_frag[2] != 'GiB':
-            continue
+            if size_frag[2] == 'MiB':
+                is_mb = True
+            else:
+                continue
         
         item = attrdict()
         item.title = codecs.encode(title, 'utf-8')
@@ -79,6 +83,8 @@ def parse(content):
         # item.link = link 
         item.seeders = int(seeders) 
         item.size = float(size_frag[1]) 
+        if is_mb:
+            item.size = item.size / 1024
         item.score = float(calculate_score(item))
         items.append(item)
         
