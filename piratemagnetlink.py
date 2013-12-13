@@ -18,7 +18,7 @@ class attrdict(dict):
         self.__dict__ = self
         
 def get_movie_page(movie_name):
-    url = 'http://thepiratebay.sx/search/%s/0/7/200' % urllib.quote(movie_name)
+    url = 'http://thepiratebay.pe/search/%s/0/7/200' % urllib.quote(movie_name)
     
     curl = Popen(('curl', '-L', '--socks5-hostname', '127.0.0.1:1080', url) , shell=False, bufsize=0, stdin=PIPE, 
     stdout=PIPE, stderr=PIPE, close_fds=True )
