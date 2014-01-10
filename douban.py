@@ -11,7 +11,7 @@ from subprocess import Popen, PIPE
 import multiprocessing
 
 username = 'clowwindy'
-pages = 2
+pages = 1
 
 
 class attrdict(dict):
