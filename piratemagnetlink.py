@@ -18,7 +18,7 @@ class attrdict(dict):
         self.__dict__ = self
         
 def get_movie_page(movie_name):
-    url = 'http://thepiratebay.pe/search/%s/0/7/200' % urllib.quote(movie_name)
+    url = 'http://thepiratebay.se/search/%s/0/7/200' % urllib.quote(movie_name)
     
     curl = Popen(('curl', '-L', '--socks5-hostname', '127.0.0.1:1080', url) , shell=False, bufsize=0, stdin=PIPE, 
     stdout=PIPE, stderr=PIPE, close_fds=True )
@@ -62,6 +62,8 @@ def parse(content):
         if not title_a:
             continue
         title = title_a.text()
+        print title
+        exit(1)
         link = title_a.attr('href')
         magnet_a = row.find('a[title*=\'magnet\']')
         magnet = magnet_a.attr('href')
@@ -98,7 +100,12 @@ if __name__ == '__main__':
         def process(line):
             words = line.strip().split('\t')
             print line
+            title, year = line.rsplit('(', 1)
+            year = year.split(')')[0].strip()
             items = parse(get_movie_page(line))
+            if not items:
+                print 'can find %s, trying %s instead' % (line, title)
+                items = parse(get_movie_page(title))
             for item in items:
                 print item
             if len(items) > 0:
