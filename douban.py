@@ -11,7 +11,7 @@ from subprocess import Popen, PIPE
 import multiprocessing
 
 username = 'clowwindy'
-pages = 1
+pages = 8
 
 
 class attrdict(dict):
@@ -20,7 +20,7 @@ class attrdict(dict):
         self.__dict__ = self
 
 def get_page(url):
-    curl = Popen(('curl', '-L', url) , shell=False, bufsize=0, stdin=PIPE, 
+    curl = Popen(('curl', '-H', 'Accept-Language: en-US', '-L', url) , shell=False, bufsize=0, stdin=PIPE, 
     stdout=PIPE, stderr=PIPE, close_fds=True )
     
     content = curl.stdout.read()

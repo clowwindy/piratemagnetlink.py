@@ -106,10 +106,12 @@ if __name__ == '__main__':
             year = year.split(')')[0].strip()
             items = parse(get_movie_page(line))
             if not items:
-                print 'can find %s, trying %s instead' % (line, title)
+                print 'cant find %s, trying %s instead' % (line, title)
                 items = parse(get_movie_page(title))
             for item in items:
                 print item
+            if not items:
+                print 'cant find %s' % title
             if len(items) > 0:
                 item = items[0]
                 print >> o, '%s\t%s\t%s\t%f\t%f' % (line, item.title, item.magnet, item.size, item.seeders)
